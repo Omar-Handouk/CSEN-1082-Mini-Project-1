@@ -70,7 +70,7 @@ ___
 ### References
 - [Scratch](https://scratch.mit.edu/)
 - [Scratch source code](https://github.com/LLK/scratch-blocks)
-- [Scratch Wikipedia](https://en.scratch-wiki.info/wiki/Scratch_Wiki_Home)
+- [Scratch Wiki](https://en.scratch-wiki.info/wiki/Scratch_Wiki_Home)
 - [Scratch file format](https://en.scratch-wiki.info/wiki/Scratch_File_Format)
 - [Working with JSON in Java](https://www.tutorialspoint.com/json/json_java_example.htm)
 - [JDK 16 Docs](https://docs.oracle.com/en/java/javase/16/)
