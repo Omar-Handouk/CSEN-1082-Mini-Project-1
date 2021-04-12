@@ -1,6 +1,14 @@
 # Visual Programming, Spring term 2021
 ## Mini Project 1“Source-to-Source Transformation”
 
+### Index
+- [Preface](#preface)
+- [Requirement](#requirements)
+- [Blocks](#blocks)
+- [Submission Guidelines](#submission-guidelines)
+- [References](#references)
+- [Literatur](#literatur)
+___
 ### Preface
 
 The aim of your first mini-project is to introduce you to the idea of source-to-source transformation.
@@ -23,7 +31,7 @@ You thus have to:
 - Transform it to an equivalent **Java** program
 - Make sure the Java program has an equivalent UI interface
 ___
-### Requirments
+### Requirements
 - OpenJDK/Oracle JDK 14+
 - Prefered text editor
 ___
