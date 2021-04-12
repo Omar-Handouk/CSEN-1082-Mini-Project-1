@@ -1,6 +1,6 @@
 # Visual Programming, Spring term 2021
 ## Mini Project 1“Source-to-Source Transformation”
-___
+
 ### Preface
 
 The aim of your first mini-project is to introduce you to the idea of source-to-source transformation.
