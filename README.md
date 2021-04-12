@@ -76,6 +76,9 @@ ___
 - [Multi-threading in Java](https://www.geeksforgeeks.org/multithreading-in-java/)
 - [Lifecycle and states of a thread in Java](https://www.geeksforgeeks.org/lifecycle-and-states-of-a-thread-in-java/)
 - [Thread.sleep() in Java – Java Thread sleep](https://www.journaldev.com/1020/thread-sleep-java)
+- [Javapoint Swing reference](https://www.javatpoint.com/java-swing)
+- [NTU Swing GUI Programming](https://www3.ntu.edu.sg/home/ehchua/programming/java/j4a_gui.html)
+- [ZetCode Swing tutorials](https://zetcode.com/javaswing/)
 ___
 ### Literatur
 - John Maloney, Mitchel Resnick, Natalie Rusk, Brian Silverman, and Evelyn Eastmond. The scratch programming language and environment.TOCE, 10(4):16:1–16:15, 2010
