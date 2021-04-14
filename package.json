@@ -1,0 +1,22 @@
+{
+  "name": "csen-1082-mini-project-1",
+  "version": "0.0.1",
+  "description": "In this project, the aim is to produce a textual representation of the visual programwithout interpreting or running it. ",
+  "main": "Main.js",
+  "scripts": {
+    "start": "node Main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Omar-Handouk/CSEN-1082-Mini-Project-1.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Omar-Handouk/CSEN-1082-Mini-Project-1/issues"
+  },
+  "homepage": "https://github.com/Omar-Handouk/CSEN-1082-Mini-Project-1#readme",
+  "devDependencies": {
+    "@types/node": "^14.14.37"
+  }
+}
