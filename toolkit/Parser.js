@@ -78,11 +78,21 @@ class Parser {
             case 'control_repeat':
                 return this.parseRepeatBlock(block, blocks);
             case 'control_repeat_until':
+                // TODO: Repeat until
                 break;
             case 'control_forever':
                 return this.parseForeverBlock(block, blocks);
             case 'control_wait':
                 return this.parseWaitBlock(block);
+            case 'control_wait_until':
+                // TODO: Wait until
+                break;
+            case 'control_if':
+                // TODO: If
+                break;
+            case 'control_if_else':
+                // TODO: If Else
+                break;
             case 'operator_add':
                 return this.parseAddBlock(block, blocks);
             case 'operator_subtract':
@@ -93,6 +103,18 @@ class Parser {
                 return this.parseDivideBlock(block, blocks);
             case 'operator_random':
                 return this.parseRandomBlock(block, blocks);
+            case 'operator_gt':
+                return this.parseGreaterThanBlock(block, blocks);
+            case 'operator_lt':
+                return this.parseLessThanBlock(block, blocks);
+            case 'operator_equals':
+                return this.parseEqualsBlock(block, blocks);
+            case 'operator_and':
+                return this.parseAndBlock(block, blocks);
+            case 'operator_or':
+                return this.parseOrBlock(block, blocks);
+            case 'operator_not':
+                return this.parseNotBlock(block, blocks);
             default:
                 break;
         }
@@ -388,6 +410,183 @@ class Parser {
         str += ')'
 
         return str;
+    }
+
+    parseGreaterThanBlock(block, blocks) {
+        block.inputs.NUM1 = block.inputs.OPERAND1;
+        delete block.inputs.OPERAND1;
+
+        block.inputs.NUM2 = block.inputs.OPERAND2;
+        delete block.inputs.OPERAND2;
+
+        const [op1_type, op1, op2_type, op2] = this.checkOperands(block.inputs);
+
+        let str = '(';
+
+        if (op1_type === 1) {
+            str += `${op1} > `;
+        } else {
+            const next = blocks[op1];
+
+            str += this.parseOne(next, blocks) + ' > ';
+        }
+
+        if (op2_type === 1) {
+            str += op2;
+        } else {
+            const next = blocks[op2];
+
+            str += this.parseOne(next, blocks);
+        }
+
+        str += ')'
+
+        return str;
+    }
+
+    parseLessThanBlock(block, blocks) {
+        block.inputs.NUM1 = block.inputs.OPERAND1;
+        delete block.inputs.OPERAND1;
+
+        block.inputs.NUM2 = block.inputs.OPERAND2;
+        delete block.inputs.OPERAND2;
+
+        const [op1_type, op1, op2_type, op2] = this.checkOperands(block.inputs);
+
+        let str = '(';
+
+        if (op1_type === 1) {
+            str += `${op1} < `;
+        } else {
+            const next = blocks[op1];
+
+            str += this.parseOne(next, blocks) + ' < ';
+        }
+
+        if (op2_type === 1) {
+            str += op2;
+        } else {
+            const next = blocks[op2];
+
+            str += this.parseOne(next, blocks);
+        }
+
+        str += ')'
+
+        return str;
+    }
+
+    parseEqualsBlock(block, blocks) {
+        block.inputs.NUM1 = block.inputs.OPERAND1;
+        delete block.inputs.OPERAND1;
+
+        block.inputs.NUM2 = block.inputs.OPERAND2;
+        delete block.inputs.OPERAND2;
+
+        const [op1_type, op1, op2_type, op2] = this.checkOperands(block.inputs);
+
+        let str = '(';
+
+        if (op1_type === 1) {
+            str += `${op1} = `;
+        } else {
+            const next = blocks[op1];
+
+            str += this.parseOne(next, blocks) + ' = ';
+        }
+
+        if (op2_type === 1) {
+            str += op2;
+        } else {
+            const next = blocks[op2];
+
+            str += this.parseOne(next, blocks);
+        }
+
+        str += ')'
+
+        return str;
+    }
+
+    parseAndBlock(block, blocks) {
+        block.inputs.NUM1 = block.inputs.OPERAND1;
+        delete block.inputs.OPERAND1;
+
+        block.inputs.NUM2 = block.inputs.OPERAND2;
+        delete block.inputs.OPERAND2;
+
+        const [op1_type, op1, op2_type, op2] = this.checkOperands(block.inputs);
+
+        let str = '(';
+
+        if (op1_type === 2) {
+            const next = blocks[op1];
+
+            str += this.parseOne(next, blocks) + ' AND ';
+        } else {
+            throw new Error(`Invalid operand at operand one\nType: ${op1_type}, Value: ${op1}`);
+        }
+
+        if (op2_type === 2) {
+            const next = blocks[op2];
+
+            str += this.parseOne(next, blocks);
+        } else {
+            throw new Error(`Invalid operand at operand two\nType: ${op2_type}, Value: ${op2}`);
+        }
+
+        str += ')'
+
+        return str;
+    }
+
+    parseOrBlock(block, blocks) {
+        block.inputs.NUM1 = block.inputs.OPERAND1;
+        delete block.inputs.OPERAND1;
+
+        block.inputs.NUM2 = block.inputs.OPERAND2;
+        delete block.inputs.OPERAND2;
+
+        const [op1_type, op1, op2_type, op2] = this.checkOperands(block.inputs);
+
+        let str = '(';
+
+        if (op1_type === 2) {
+            const next = blocks[op1];
+
+            str += this.parseOne(next, blocks) + ' OR ';
+        } else {
+            throw new Error(`Invalid operand at operand one\nType: ${op1_type}, Value: ${op1}`);
+        }
+
+        if (op2_type === 2) {
+            const next = blocks[op2];
+
+            str += this.parseOne(next, blocks);
+        } else {
+            throw new Error(`Invalid operand at operand two\nType: ${op2_type}, Value: ${op2}`);
+        }
+
+        str += ')'
+
+        return str;
+    }
+
+    parseNotBlock(block, blocks) {
+        const inputs = block.inputs;
+        const operand = inputs.OPERAND;
+
+        if (operand === null || operand === undefined || operand === '') {
+            throw new Error('No operands found');
+        }
+
+        if (operand[0] !== 2) {
+            throw new Error(`Operand is of in-correct type: ${operand[0]}`);
+        }
+
+        const next = blocks[operand[1]];
+
+        return `(NOT ${this.parseOne(next, blocks)})`;
     }
 
     getProject() {
