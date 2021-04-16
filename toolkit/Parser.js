@@ -78,21 +78,17 @@ class Parser {
             case 'control_repeat':
                 return this.parseRepeatBlock(block, blocks);
             case 'control_repeat_until':
-                // TODO: Repeat until
-                break;
+                return this.parseRepeatUntilBlock(block, blocks);
             case 'control_forever':
                 return this.parseForeverBlock(block, blocks);
             case 'control_wait':
                 return this.parseWaitBlock(block);
             case 'control_wait_until':
-                // TODO: Wait until
-                break;
+                return this.parseWaitUntilBlock(block, blocks);
             case 'control_if':
-                // TODO: If
-                break;
+                return this.parseIfBlock(block, blocks);
             case 'control_if_else':
-                // TODO: If Else
-                break;
+                return this.parseIfElseBlock(block, blocks);
             case 'operator_add':
                 return this.parseAddBlock(block, blocks);
             case 'operator_subtract':
@@ -228,6 +224,41 @@ class Parser {
         return sequence;
     }
 
+    parseRepeatUntilBlock(block, blocks) {
+        const inputs = block.inputs;
+        const [conditionType, conditionBlockID] = inputs.CONDITION;
+        const [substackType, startBlockID] = inputs.SUBSTACK;
+
+        let condition = null;
+        if (conditionType === 2) {
+            condition = this.parseOne(blocks[conditionBlockID], blocks);
+        } else {
+            throw new Error(`Invalid condition type: ${conditionType}`);
+        }
+
+        if (substackType !== 2) {
+            throw new Error(`Invalid sub-stack type: ${substackType}`);
+        }
+
+        let str = `Repeat until ${condition} {\n`;
+
+        let next = blocks[startBlockID];
+
+        while (next !== null && next !== undefined) {
+            str += this.parseOne(next, blocks);
+
+            if (next.next === null) {
+                break;
+            }
+
+            next = blocks[next.next];
+        }
+
+        str += '}\n';
+
+        return str;
+    }
+
     parseForeverBlock(block, blocks) {
         let sequence = `Repeat forever {\n`;
 
@@ -253,6 +284,107 @@ class Parser {
         const duration = Number.parseInt(block.inputs.DURATION[1][1], 10);
 
         return `Waiting for ${duration} second${duration === 1 ? '' : 's'}\n`;
+    }
+
+    parseWaitUntilBlock(block, blocks) {
+        const inputs = block.inputs;
+        const [conditionType, conditionBlockID] = inputs.CONDITION;
+
+        let condition = null;
+        if (conditionType === 2) {
+            condition = this.parseOne(blocks[conditionBlockID], blocks);
+        } else {
+            throw new Error(`Invalid condition type: ${conditionType}`);
+        }
+
+        return `Wait until ${condition}\n`;
+    }
+
+    parseIfBlock(block, blocks) {
+        const inputs = block.inputs;
+        const [conditionType, conditionBlockID] = inputs.CONDITION;
+        const [substackType, startBlockID] = inputs.SUBSTACK;
+
+        let condition = null;
+        if (conditionType === 2) {
+            condition = this.parseOne(blocks[conditionBlockID], blocks);
+        } else {
+            throw new Error(`Invalid condition type: ${conditionType}`);
+        }
+
+        if (substackType !== 2) {
+            throw new Error(`Invalid sub-stack type: ${substackType}`);
+        }
+
+        let str = `If ${condition} {\n`;
+
+        let next = blocks[startBlockID];
+
+        while (next !== null && next !== undefined) {
+            str += this.parseOne(next, blocks);
+
+            if (next.next === null) {
+                break;
+            }
+
+            next = blocks[next.next];
+        }
+
+        str += '}\n';
+
+        return str;
+    }
+
+    parseIfElseBlock(block, blocks) {
+        const inputs = block.inputs;
+        const [conditionType, conditionBlockID] = inputs.CONDITION;
+        const [substackType, startBlockID] = inputs.SUBSTACK;
+        const [substackType2, startBlockID2] = inputs.SUBSTACK2;
+
+        let condition = null;
+        if (conditionType === 2) {
+            condition = this.parseOne(blocks[conditionBlockID], blocks);
+        } else {
+            throw new Error(`Invalid condition type: ${conditionType}`);
+        }
+
+        if (substackType !== 2) {
+            throw new Error(`Invalid sub-stack type: ${substackType}`);
+        }
+
+        let str = `If ${condition} {\n`;
+
+        let next = blocks[startBlockID];
+        while (next !== null && next !== undefined) {
+            str += this.parseOne(next, blocks);
+
+            if (next.next === null) {
+                break;
+            }
+
+            next = blocks[next.next];
+        }
+
+        if (substackType2 !== 2) {
+            throw new Error(`Invalid sub-stack2 type: ${substackType}`);
+        }
+
+        str += '} else {\n';
+
+        next = blocks[startBlockID2];
+        while (next !== null && next !== undefined) {
+            str += this.parseOne(next, blocks);
+
+            if (next.next === null) {
+                break;
+            }
+
+            next = blocks[next.next];
+        }
+
+        str += '}\n';
+
+        return str;
     }
 
     checkOperands(inputs) {
